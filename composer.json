@@ -3,7 +3,7 @@
     "description": "Coding Dojo: [KATA] Test doubles (FR)",
     "type": "project",
     "require": {
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^5.0",
         "mockery/mockery": "^1.2",
         "php": "5.6"
     },
