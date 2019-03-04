@@ -1,0 +1,12 @@
+{
+    "name": "laryakan/test-doubles-kata",
+    "description": "Coding Dojo: [KATA] Test doubles (FR)",
+    "type": "project",
+    "require": {
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.2",
+        "php": ">=5.4"
+    },
+    "license": "MIT",
+    "minimum-stability": "dev"
+}
