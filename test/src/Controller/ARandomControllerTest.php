@@ -19,7 +19,7 @@ class ARandomControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test
-    ***
+    *** @covers ARandomController::_construct
     **/
     public function constructTest()
     {
