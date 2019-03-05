@@ -7,6 +7,11 @@
         "mockery/mockery": "^1.2",
         "php": ">=5.6"
     },
+    "autoload": {
+    "psr-4": {
+      "App\\": "src"
+    }
+  },
     "license": "MIT",
     "minimum-stability": "dev"
 }
