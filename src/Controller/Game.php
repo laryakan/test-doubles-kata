@@ -48,14 +48,14 @@ class Game
     protected $rules;
 
     /**
-    * @param sting $playerOneName
+    * @param string $playerOneName
     *       Nom du premier joueur
-    * @param sting $playerTwoName
+    * @param string $playerTwoName
     *       Nom du second joueur
     **/
     public function __construct(string $playerOneName, string $playerTwoName)
     {
-        // On initialisez les joueurs
+        // On initialise les joueurs
         $this->players = array(
         new Player($playerOneName),
         new Player($playerTwoName),
@@ -70,6 +70,10 @@ class Game
             }
         }
     }
+
+    /**
+    * Fonction de démarrage de la partie
+    */
 
     public function startGame()
     {
@@ -143,6 +147,34 @@ class Game
                 $player->increaseMaxMana();
                 // Et on réinitialise sa mana "courante"
                 $player->resetCurrentMana();
+            }
+        }
+    }
+
+    /**
+    * @param Player $playerOne
+    *       Premier joueur
+    * @param Player $playerTwo
+    *       Second joueur
+    *
+    * Permet de redéfinir les joueurs, et nottament, via une
+    * injection depuis les tests unitaires
+    **/
+
+    public function setPlayers(Player $playerOne, Player $playerTwo)
+    {
+        // On initialise les joueurs
+        $this->players = array(
+        $playerOne,
+        $playerTwo,
+      );
+
+        // On leur fournit leur Deck de départ
+        foreach ($this->players as $player) {
+            $player->setDeck(new Deck());
+            //Et leur main initiale de 3 cartes
+            for ($i=0; $i < 3; $i++) {
+                $player->pickDeckCard();
             }
         }
     }
