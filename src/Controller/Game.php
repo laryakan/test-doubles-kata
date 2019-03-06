@@ -58,9 +58,9 @@ class Game
     public function __construct(string $playerOneName, string $playerTwoName, array $rules = array())
     {
         $this->players = array(
-          new Player($playerOneName),
-          new Player($playerTwoName),
-        );
+      new Player($playerOneName),
+      new Player($playerTwoName),
+    );
 
         foreach ($this->players as $player) {
             $player->setDeck(new Deck());
