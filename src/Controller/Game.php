@@ -29,7 +29,7 @@
 ** - Si un joueur ne peut pas jouer car il ne dispose pas d'assez de mana pour jouer une carte, son adversaire joue immédiatement
 **
 ** Condition spéciale :
-** - Si un joueur dont le deck est vide ne peut pas jouer, il perd 1 point de vie et son adversaire prend la main
+** - Si un joueur dont le deck est vide ne peut pas jouer, il perd 1 point de vie et son adversaire prend la main (pas encore implémenté)
 ** - La main d'un joueur ne peut pas dépasser 5 carte, toute les carte supplémentaire sont retirées du jeu (définitivement)
 ** - Les carte qui coûte 0 de mana n'inflige aucun dégât, elle ne servent à rien
 **
@@ -52,10 +52,8 @@ class Game
     *       Nom du premier joueur
     * @param sting $playerTwoName
     *       Nom du second joueur
-    * @param array $rules
-    *       Listes de règles du jeu afin de les modifiers
     **/
-    public function __construct(string $playerOneName, string $playerTwoName, array $rules = array())
+    public function __construct(string $playerOneName, string $playerTwoName)
     {
         $this->players = array(
         new Player($playerOneName),
@@ -67,6 +65,9 @@ class Game
             for ($i=0; $i < 3; $i++) {
                 $player->pickDeckCard();
             }
+
+            //print('Main de '.$player->name.' : '.json_encode($player->hand)."\n");
+            //print('Deck de '.$player->name.' : '.json_encode($player->deck)."\n");
         }
     }
 
@@ -76,31 +77,53 @@ class Game
         $gameOver = false;
         print("=== MOCKARD === \n Début de la partie...\n");
         print($this->players[0]->name ." VS ".$this->players[1]->name."\n");
+        $round = 0;
         while (!$gameOver) {
+            $round++;
+            print("\n\n TOUR " . $round ."\n");
+
             // Granularité : Tour
             foreach ($this->players as $i => $player) {
                 $opponent = ($i == 0) ? $this->players[1] : $this->players[0];
 
                 $canPlay = true;
-                print("C'est au tour de ".$player->name."\n");
+                print("---\nC'est au tour de ".$player->name."\n");
+                print($player."\n");
+                //sleep(1);
+
+                $player->pickDeckCard();
+                // Si le joueur à plus de 5 carte on lui retire la dernière
+                if (sizeof($player->hand) > 5) {
+                    array_pop($player->hand);
+                }
+                
                 // Granularité : Joueur
                 while ($canPlay) {
+                    //sleep(1);
                     $playedCard = $player->playHighestValidManaCostingCard();
                 
                     if (is_null($playedCard)) {
                         $canPlay = false;
                         print($player->name." ne peut pas jouer\n");
+                        if (empty($player->deck->cards)) {
+                            print("Son Deck étant vide : -1PV\n");
+                            $player->removeHealth();
+                        }
                     } else {
                         $opponent->removeHealth($playedCard->manaCost);
                         $player->removeMana($playedCard->manaCost);
-                        print($player->name .' joue '. $playedCard->name . ' et inflige '. $playedCard->manaCost . ' à ' . $opponent->name . "\n");
+                        print($player->name .' joue "'. $playedCard->name . '"" et inflige '. $playedCard->manaCost . ' à ' . $opponent->name . "\n");
                         if ($opponent->health <= 0) {
                             $gameOver = true;
+                            $canPlay = false;
                             print($player->name .' a vaincu '. $opponent->name . ", partie terminée ! \n");
+                            return;
                         }
                     }
                 }
+                $player->increaseMaxMana();
                 $player->addMana();
+                $player->resetCurrentMana();
             }
         }
     }

@@ -11,8 +11,8 @@ namespace App\Model;
 
 class Card
 {
-    protected $name;
-    protected $manaCost;
+    public $name;
+    public $manaCost;
 
     public function __construct($name = null, $manaCost = null)
     {

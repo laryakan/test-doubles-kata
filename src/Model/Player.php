@@ -28,7 +28,7 @@ class Player
     public function __construct(string $name)
     {
         $this->name = $name;
-        $this->mana = array('current' => 0, 'max' => 10);
+        $this->mana = array('current' => 0, 'max' => 1);
         $this->health = 30;
     }
 
@@ -39,17 +39,29 @@ class Player
 
     public function pickDeckCard()
     {
-        array_push($this->hand, $this->deck->pickCard());
+        $pickedCard = $this->deck->pickCard();
+        if (!is_null($pickedCard)) {
+            array_push($this->hand, $pickedCard);
+        }
     }
 
     public function playHighestValidManaCostingCard()
     {
         $highestValidManaCostingCard = null;
-        foreach ($this->hand as $card) {
-            if ($card->manaCost <= $mana) {
+
+        // Played card index
+        $pci = null;
+        foreach ($this->hand as $i => $card) {
+            if ($card->manaCost <= $this->mana['current']) {
                 $highestValidManaCostingCard = $card;
+                $pci = $i;
             }
         }
+
+        if (!is_null($pci)) {
+            unset($this->hand[$pci]);
+        }
+
         return $highestValidManaCostingCard;
     }
 
@@ -60,11 +72,36 @@ class Player
 
     public function addMana($point = 1)
     {
+        if ($this->mana['current'] + $point > $this->mana['max']) {
+            $this->mana['current'] = $this->mana['max'];
+            return;
+        }
         $this->mana['current'] += $point;
+    }
+
+    public function increaseMaxMana($point = 1)
+    {
+        if ($this->mana['max'] < 10) {
+            $this->mana['max'] += $point;
+        }
     }
 
     public function removeMana($point = 1)
     {
+        if ($this->mana['current'] - $point < 0) {
+            $this->mana['current'] = 0;
+            return;
+        }
         $this->mana['current'] -= $point;
+    }
+
+    public function resetCurrentMana()
+    {
+        $this->mana['current'] = $this->mana['max'];
+    }
+
+    public function __toString()
+    {
+        return $this->name . " dispose de " . sizeof($this->hand) . " cartes en main, " .sizeof($this->deck->cards) . " dans son deck, ". $this->health . "PV et " . $this->mana['current'] ."PM.";
     }
 }

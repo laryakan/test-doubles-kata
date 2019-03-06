@@ -13,7 +13,7 @@ use App\Model\Card;
 
 class Deck
 {
-    protected $cards;
+    public $cards;
 
     public function __construct($numberOfCards = 30)
     {
@@ -25,6 +25,9 @@ class Deck
 
     public function pickCard()
     {
+        if (empty($this->cards)) {
+            return null;
+        }
         $rci = array_rand($this->cards);
         $rCard = $this->cards[$rci];
         unset($this->cards[$rci]);
