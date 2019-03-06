@@ -58,9 +58,9 @@ class Game
     public function __construct(string $playerOneName, string $playerTwoName, array $rules = array())
     {
         $this->players = array(
-      new Player($playerOneName),
-      new Player($playerTwoName),
-    );
+        new Player($playerOneName),
+        new Player($playerTwoName),
+      );
 
         foreach ($this->players as $player) {
             $player->setDeck(new Deck());
@@ -69,5 +69,30 @@ class Game
 
     public function startGame()
     {
+        // Granularité : Partie
+        $gameOver = false;
+        while (!$gameOver) {
+            // Granularité : Tour
+            foreach ($this->players as $i => $player) {
+                $opponent = array_diff_key($this->players, array_flip(array($i)))[0];
+
+                $canPlay = true;
+                // Granularité : Joueur
+                while ($canPlay) {
+                    $playedCard = $player->playHighestValidManaCostingCard();
+                
+                    if (is_null($playedCard)) {
+                        $canPlay = false;
+                    } else {
+                        $opponent->removeHealth($playedCard->manaCost);
+                        print($player->name .' joue '. $playedCard->name . ' et inflige '. $playedCard->manaCost . ' à ' . $opponent->name . "\n");
+                        if ($opponent->health <= 0) {
+                            $gameOver = true;
+                            print($player->name .' a vaincu '. $opponent->name . ", partie terminée ! \n");
+                        }
+                    }
+                }
+            }
+        }
     }
 }
