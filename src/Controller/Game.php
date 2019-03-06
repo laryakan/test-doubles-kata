@@ -171,7 +171,7 @@ class Game
 
         // On leur fournit leur Deck de départ
         foreach ($this->players as $player) {
-            $player->setDeck((is_null($deck)) ? new Deck() : $deck);
+            $player->setDeck($deck);
             //Et leur main initiale de 3 cartes
             for ($i=0; $i < 3; $i++) {
                 $player->pickDeckCard();
