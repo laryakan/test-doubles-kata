@@ -75,7 +75,7 @@ class GameTest extends TestCase
         $deck = Mockery::mock('App\Model\Deck');
         $deck
         ->shouldReceive('pickCard') // L'objet va recevoir un appel
-        ->atLeast()->times(6) // au moins 3 fois par joueur
+        ->atLeast()->times(29) // au moins 3 fois par joueur
         ->andReturn($card); // et retourner une carte à chaque fois
 
         
@@ -94,5 +94,12 @@ class GameTest extends TestCase
 
 
         $game->setPlayers($player, $player, $deck);
+    }
+
+    // Le teardown est une fixture qui sera executé après chaque test
+    public function tearDown()
+    {
+        // On appel la méthode statique qui signale à Mockery d'enclencher ses attentes
+        Mockery::close();
     }
 }
