@@ -98,7 +98,7 @@ class Game
                 print($player."\n");
 
                 // Si on veut examiner le déroulement de la partie, décommenter
-                sleep(1);
+                //sleep(1);
 
                 // Il commence son tour en tirant une carte
                 $player->pickDeckCard();
