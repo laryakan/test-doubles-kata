@@ -25,7 +25,7 @@ class Deck
 
     public function pickCard()
     {
-        $rci = array_rand($this->$cards);
+        $rci = array_rand($this->cards);
         $rCard = $this->cards[$rci];
         unset($this->cards[$rci]);
         return $rCard;
