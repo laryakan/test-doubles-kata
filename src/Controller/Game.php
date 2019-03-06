@@ -53,7 +53,7 @@ class Game
     * @param string $playerTwoName
     *       Nom du second joueur
     **/
-    public function __construct(string $playerOneName, string $playerTwoName)
+    public function __construct(string $playerOneName = 'Player1', string $playerTwoName = 'Player2')
     {
         // On initialise les joueurs
         $this->players = array(
@@ -161,7 +161,7 @@ class Game
     * injection depuis les tests unitaires
     **/
 
-    public function setPlayers(Player $playerOne, Player $playerTwo)
+    public function setPlayers(Player $playerOne, Player $playerTwo, Deck $deck = null)
     {
         // On initialise les joueurs
         $this->players = array(
@@ -171,7 +171,7 @@ class Game
 
         // On leur fournit leur Deck de départ
         foreach ($this->players as $player) {
-            $player->setDeck(new Deck());
+            $player->setDeck((is_null($deck)) ? new Deck() : $deck);
             //Et leur main initiale de 3 cartes
             for ($i=0; $i < 3; $i++) {
                 $player->pickDeckCard();
