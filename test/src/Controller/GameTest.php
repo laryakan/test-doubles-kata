@@ -23,7 +23,7 @@ class GameTest extends PHPUnit_Framework_TestCase
     **/
     public function constructTest()
     {
-        $arc = new Game();
+        $arc = new Game('Tester 1', 'Tester 2');
         $this->assertInstanceOf('App\Controller\Game', $arc);
     }
 }

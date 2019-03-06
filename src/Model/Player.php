@@ -39,7 +39,7 @@ class Player
 
     public function pickDeckCard()
     {
-        array_push($hand, $this->deck->pickCard());
+        array_push($this->hand, $this->deck->pickCard());
     }
 
     public function playHighestValidManaCostingCard()
