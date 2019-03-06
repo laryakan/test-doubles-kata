@@ -17,7 +17,7 @@ class Player
 {
     public $name;
     public $deck;
-    public $hand;
+    public $hand = array();
     public $mana;
     public $health;
 

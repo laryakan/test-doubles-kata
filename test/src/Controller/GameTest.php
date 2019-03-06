@@ -2,10 +2,10 @@
 
 namespace App\Test\Controller;
 
-use App\Controller\ARandomController;
+use App\Controller\Game;
 use PHPUnit_Framework_TestCase;
 
-class ARandomControllerTest extends PHPUnit_Framework_TestCase
+class GameTest extends PHPUnit_Framework_TestCase
 {
 
     // Au moins comme ça on aura toujours au moins un test
@@ -23,7 +23,7 @@ class ARandomControllerTest extends PHPUnit_Framework_TestCase
     **/
     public function constructTest()
     {
-        $arc = new ARandomController();
-        $this->assertInstanceOf('App\Controller\ARandomController', $arc);
+        $arc = new Game();
+        $this->assertInstanceOf('App\Controller\Game', $arc);
     }
 }

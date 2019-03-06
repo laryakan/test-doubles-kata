@@ -29,7 +29,7 @@ class Card
 
     protected static function generateCardName()
     {
-        $nameList = explode("\n", utf8_encode(str_replace("\r", '', file_get_contents($this->files['all_users']))));
+        $nameList = explode("\n", utf8_encode(str_replace("\r", '', file_get_contents(APP_ROOT . '/CardNames.txt'))));
         $rni = array_rand($nameList);
         return ucwords($nameList[$rni]);
     }

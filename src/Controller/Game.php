@@ -64,6 +64,9 @@ class Game
 
         foreach ($this->players as $player) {
             $player->setDeck(new Deck());
+            for ($i=0; $i < 3; $i++) {
+                $player->pickDeckCard();
+            }
         }
     }
 
@@ -71,20 +74,25 @@ class Game
     {
         // Granularité : Partie
         $gameOver = false;
+        print("=== MOCKARD === \n Début de la partie...\n");
+        print($this->players[0]->name ." VS ".$this->players[1]->name."\n");
         while (!$gameOver) {
             // Granularité : Tour
             foreach ($this->players as $i => $player) {
-                $opponent = array_diff_key($this->players, array_flip(array($i)))[0];
+                $opponent = ($i == 0) ? $this->players[1] : $this->players[0];
 
                 $canPlay = true;
+                print("C'est au tour de ".$player->name."\n");
                 // Granularité : Joueur
                 while ($canPlay) {
                     $playedCard = $player->playHighestValidManaCostingCard();
                 
                     if (is_null($playedCard)) {
                         $canPlay = false;
+                        print($player->name." ne peut pas jouer\n");
                     } else {
                         $opponent->removeHealth($playedCard->manaCost);
+                        $player->removeMana($playedCard->manaCost);
                         print($player->name .' joue '. $playedCard->name . ' et inflige '. $playedCard->manaCost . ' à ' . $opponent->name . "\n");
                         if ($opponent->health <= 0) {
                             $gameOver = true;
@@ -92,6 +100,7 @@ class Game
                         }
                     }
                 }
+                $player->addMana();
             }
         }
     }
