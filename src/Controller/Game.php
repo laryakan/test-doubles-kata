@@ -55,19 +55,19 @@ class Game
     **/
     public function __construct(string $playerOneName, string $playerTwoName)
     {
+        // On initialisez les joueurs
         $this->players = array(
         new Player($playerOneName),
         new Player($playerTwoName),
       );
 
+        // On leur fournit leur Deck de départ
         foreach ($this->players as $player) {
             $player->setDeck(new Deck());
+            //Et leur main initiale de 3 cartes
             for ($i=0; $i < 3; $i++) {
                 $player->pickDeckCard();
             }
-
-            //print('Main de '.$player->name.' : '.json_encode($player->hand)."\n");
-            //print('Deck de '.$player->name.' : '.json_encode($player->deck)."\n");
         }
     }
 
@@ -77,20 +77,30 @@ class Game
         $gameOver = false;
         print("=== MOCKARD === \n Début de la partie...\n");
         print($this->players[0]->name ." VS ".$this->players[1]->name."\n");
+
+        // Compteur de round
         $round = 0;
+
+        // Boucle de la partie
         while (!$gameOver) {
             $round++;
             print("\n\n TOUR " . $round ."\n");
 
             // Granularité : Tour
             foreach ($this->players as $i => $player) {
+
+              // Afin de déterminer l'opposant
                 $opponent = ($i == 0) ? $this->players[1] : $this->players[0];
 
+                // Puisqu'il s'agit d'un nouveua round, le joueur peut jouer
                 $canPlay = true;
                 print("---\nC'est au tour de ".$player->name."\n");
                 print($player."\n");
-                //sleep(1);
 
+                // Si on veut examiner le déroulement de la partie, décommenter
+                sleep(1);
+
+                // Il commence son tour en tirant une carte
                 $player->pickDeckCard();
                 // Si le joueur à plus de 5 carte on lui retire la dernière
                 if (sizeof($player->hand) > 5) {
@@ -100,19 +110,26 @@ class Game
                 // Granularité : Joueur
                 while ($canPlay) {
                     //sleep(1);
+                    // Nous prennons le parti de lui faire jouer la plus grosse carte possible
                     $playedCard = $player->playHighestValidManaCostingCard();
                 
+                    // S'il ne peut pas jouer
                     if (is_null($playedCard)) {
                         $canPlay = false;
                         print($player->name." ne peut pas jouer\n");
+                        // Et si en plus son deck est vide
                         if (empty($player->deck->cards)) {
                             print("Son Deck étant vide : -1PV\n");
                             $player->removeHealth();
                         }
                     } else {
+                        // S'il peut jouer, il inflige des dégâts à son adversaire
                         $opponent->removeHealth($playedCard->manaCost);
+                        // Et perd la mana associé à la carte jouée
                         $player->removeMana($playedCard->manaCost);
                         print($player->name .' joue "'. $playedCard->name . '"" et inflige '. $playedCard->manaCost . ' à ' . $opponent->name . "\n");
+
+                        // Si en plus son adversaire passe à 0 PV ou moins, le joueur courant gagne la partie
                         if ($opponent->health <= 0) {
                             $gameOver = true;
                             $canPlay = false;
@@ -121,8 +138,10 @@ class Game
                         }
                     }
                 }
+
+                // Fin du tour, on augmente le mana max du joueur
                 $player->increaseMaxMana();
-                $player->addMana();
+                // Et on réinitialise sa mana "courante"
                 $player->resetCurrentMana();
             }
         }
