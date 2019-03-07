@@ -2,7 +2,7 @@
 /*
 ** Dans le cadre de ce Coding Dojo, le thème étant de
 ** une partie de "Jeu de cartes à collectionner" (TGC),
-** le controlleur jouera le rôle d'une partie entre deux
+** le contrôleur jouera le rôle d'une partie entre deux
 ** joueurs.
 **
 ** Les règles du jeux sont inspirées de celles de Hearthstone
@@ -28,7 +28,7 @@
 ** - Si un joueur a son montant de point de vie <= 0, son adversaire gagne
 ** - Si un joueur ne peut pas jouer car il ne dispose pas d'assez de mana pour jouer une carte, son adversaire joue immédiatement
 **
-** Condition spéciale :
+** Conditions spéciales :
 ** - Si un joueur dont le deck est vide ne peut pas jouer, il perd 1 point de vie et son adversaire prend la main (pas encore implémenté)
 ** - La main d'un joueur ne peut pas dépasser 5 carte, toute les carte supplémentaire sont retirées du jeu (définitivement)
 ** - Les carte qui coûte 0 de mana n'inflige aucun dégât, elle ne servent à rien
