@@ -25,7 +25,7 @@ class Player
     * @param sting $name
     *       Nom du joueur
     **/
-    public function __construct(string $name)
+    public function __construct($name)
     {
         $this->name = $name;
         $this->mana = array('current' => 0, 'max' => 1);

@@ -15,11 +15,11 @@ class Deck
 {
     public $cards;
 
-    public function __construct($numberOfCards = 30)
+    public function __construct($numberOfCards = 30, Card $card = null)
     {
         $this->cards = array();
         for ($i=0; $i < $numberOfCards; $i++) {
-            array_push($this->cards, new Card());
+            array_push($this->cards, $card);
         }
     }
 

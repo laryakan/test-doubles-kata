@@ -43,29 +43,31 @@ class GameTest extends TestCase
         // "Player". Nous allons juste le faire croire au
         // contrôleur.
         
-        $player = Mockery::mock('App\Model\Player');
+        $player1 = Mockery::mock('App\Model\Player');
+        $player2 = Mockery::mock('App\Model\Player');
 
         
         // Il faut cependant spécifier l'ensemble des méthodes
         // qui vont être appellé et ce que nous attendons comme
         // retour de cet appel.
         
-        $player->shouldReceive('setDeck')->andReturnNull();
-        $player->shouldReceive('pickDeckCard')->andReturnNull();
+        $player1->shouldReceive('setDeck')->once()->andReturn();
+        $player1->shouldReceive('pickDeckCard')->andReturnNull();
 
+        $player2->shouldReceive('setDeck')->once()->andReturn();
+        $player2->shouldReceive('pickDeckCard')->andReturnNull();
         
         // Les méthodes appelé durant l'execution de la fonction
         // "setPlayers" étant identique sur les deux joueurs
         // nous pouvons nous contenter de ne le mocker qu'une fois
         
-        $game->setPlayers($player, $player);
+        $game->setPlayers($player1, $player2);
     }
 
     /** @test */
-    public function testSetPlayersWithMoreExcpectation()
+    public function testConstructWithMoreExcpectations()
     {
         $game = new Game();
-
         // Afin de préparer notre Deck, nous devons disposer
         // de cartes. Nous préparrons donc un Mock de carte
         $card = Mockery::mock('App\Model\Card');
@@ -73,10 +75,16 @@ class GameTest extends TestCase
         // Dans le cadre d'un test un peu plus complexe, nous
         // allons avoir besoin de préparer un mock
         // supplémentaire, en l'occurence un Deck
-        $deck = Mockery::mock('App\Model\Deck');
-        $deck
+        $deck1 = Mockery::mock('App\Model\Deck');
+        $deck1
         ->shouldReceive('pickCard') // L'objet va recevoir un appel
-        ->atLeast()->times(6) // au moins 3 fois par joueur
+        ->atLeast()->times(3) // au moins 3 fois par joueur
+        ->andReturn($card); // et retourner une carte à chaque fois
+
+        $deck2 = Mockery::mock('App\Model\Deck');
+        $deck2
+        ->shouldReceive('pickCard') // L'objet va recevoir un appel
+        ->atLeast()->times(3) // au moins 3 fois par joueur
         ->andReturn($card); // et retourner une carte à chaque fois
 
         // Le même test que ci-dessus mais un peut plus complexe
@@ -96,24 +104,33 @@ class GameTest extends TestCase
         $playerSpyOne = new PlayerSpy('PlayerSpyOne');
         $playerSpyTwo = new PlayerSpy('PlayerSpyTwo');
         
-        $game->setPlayers($playerSpyOne, $playerSpyTwo, $deck);
+        $game->setPlayers($playerSpyOne, $playerSpyTwo, $deck1, $deck2);
+
+        //var_dump($playerSpyOne->calls);
+
 
         // Nous pouvons maintenant vérifier que notre espions
         // a bien reçu ses appels, et dans l'ordre
 
-        $expectedCalls = array(
-            'setDeck'=> array($deck),
-            'pickDeckCard'=> array(),
-            'pickDeckCard'=> array(),
-            'pickDeckCard'=> array(),
+        $expectedCallsPlayerOne = array(
+            array('setDeck'=> array($deck1)),
+            array('pickDeckCard'=> array()),
+            array('pickDeckCard'=> array()),
+            array('pickDeckCard'=> array()),
+        );
+
+        $expectedCallsPlayerTwo = array(
+            array('setDeck'=> array($deck2)),
+            array('pickDeckCard'=> array()),
+            array('pickDeckCard'=> array()),
+            array('pickDeckCard'=> array()),
         );
 
         // Sur le premier joueur
-        $this->assertEquals($expectedCalls, $playerSpyOne->calls);
+        $this->assertEquals($expectedCallsPlayerOne, $playerSpyOne->calls);
 
-        // Sur le second joueurs
-        // Sur le premier joueur
-        //$this->assertEquals($expectedCalls, $playerSpyTwo->calls);
+        // Sur le second joueur
+        $this->assertEquals($expectedCallsPlayerTwo, $playerSpyTwo->calls);
     }
 
     // Le teardown est une fixture qui sera executée après chaque tests (setUp est executé avant chaques tests)

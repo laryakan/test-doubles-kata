@@ -161,7 +161,7 @@ class Game
     * injection depuis les tests unitaires
     **/
 
-    public function setPlayers(Player $playerOne, Player $playerTwo, $deck = null)
+    public function setPlayers(Player $playerOne, Player $playerTwo, $deck1 = null, $deck2 = null)
     {
         // On initialise les joueurs
         $this->players = array(
@@ -169,13 +169,17 @@ class Game
         $playerTwo,
       );
 
-        // On leur fournit leur Deck de départ
-        foreach ($this->players as $player) {
-            $player->setDeck((is_null($deck) ? new Deck() : $deck));
-            //Et leur main initiale de 3 cartes
-            for ($i=0; $i < 3; $i++) {
-                $player->pickDeckCard();
-            }
+    
+
+        $this->players[0]->setDeck((is_null($deck1) ? new Deck() : $deck1));
+        $this->players[1]->setDeck((is_null($deck2) ? new Deck() : $deck2));
+
+
+            
+        //Et leur main initiale de 3 cartes
+        for ($i=0; $i < 3; $i++) {
+            $this->players[0]->pickDeckCard();
+            $this->players[1]->pickDeckCard();
         }
     }
 }

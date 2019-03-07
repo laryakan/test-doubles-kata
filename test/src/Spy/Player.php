@@ -77,6 +77,7 @@ class Player extends OriginalPlayer
 
     public function __toString()
     {
+        return '';
     }
 
     // Une méthode qui permet de vérifier l'état des propriétés
@@ -89,10 +90,6 @@ class Player extends OriginalPlayer
     //Cette fonction va servir de mouchard
     protected function spy($method, $args)
     {
-        //print($method."\n");
-        $this->calls = array_merge(
-            $this->calls,
-            array($method=>$args)
-        );
+        $this->calls[] = array( $method => $args );
     }
 }
