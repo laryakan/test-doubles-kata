@@ -13,12 +13,9 @@ class DeckTest extends TestCase
     /** @test */
     public function testConstruct()
     {
-        $card = Mockery::mock('alias:App\Model\Card');
-        $card->shouldAllowMockingProtectedMethods();
-        $card->shouldReceive('generateCardName')->atLeast()->times(30)->andReturn(array('ZogZog','FooBar'));
-
-        $deck = new Deck(30, $card);
+        $deck = new Deck(30);
         $this->assertInstanceOf('App\Model\Deck', $deck);
+        $this->assertEquals(count($deck->cards), 30);
     }
 
     // Le teardown est une fixture qui sera executée après chaque tests (setUp est executé avant chaques tests)

@@ -15,14 +15,15 @@ class Deck
 {
     public $cards;
 
-    public function __construct($numberOfCards = 30, Card $card = null)
+    public function __construct($numberOfCards = 30)
     {
         $this->cards = array();
         for ($i=0; $i < $numberOfCards; $i++) {
-            array_push($this->cards, $card);
+            array_push($this->cards, new Card());
         }
     }
 
+    // Méthode de récupération de carte
     public function pickCard()
     {
         if (empty($this->cards)) {
