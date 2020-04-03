@@ -133,6 +133,33 @@ class GameTest extends TestCase
         $this->assertEquals($expectedCallsPlayerTwo, $playerSpyTwo->calls);
     }
 
+    /** @test */
+    public function testStartGame()
+    {
+    
+        $player1 = Mockery::mock('App\Model\Player');
+        $player2 = Mockery::mock('App\Model\Player');
+
+        $deckPlayer1 = self::mockNewDeck();
+        $deckPlayer2 = self::mockNewDeck();
+
+        $game = new Game($player1, $player2, $deckPlayer1, $deckPlayer2);
+
+        $player1->shouldReceive('pickDeckCard')->once();
+        $player2->shouldReceive('pickDeckCard')->once();
+        print('fsdbjfhsdgfgsdyufgsdyufgsdu');
+        $game->startGame();
+    }
+
+    protected static function mockNewDeck()
+    {
+        $deck = Mockery::mock('App\Model\Deck');
+        $deck->shouldReceive('pickCard');
+        return $deck;
+    }
+
+
+
     // Le teardown est une fixture qui sera executée après chaque tests (setUp est executé avant chaques tests)
     public function tearDown()
     {
