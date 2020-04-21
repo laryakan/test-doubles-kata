@@ -54,14 +54,14 @@ class Game
     *       Nom du second joueur
     **/
     public function __construct(
-        string $playerOneName = 'Player1',
-        string $playerTwoName = 'Player2',
+        $playerOne = 'Player1',
+        $playerTwo = 'Player2',
         Deck $deck1 = null,
         Deck $deck2 = null
     ) {
         $this->setPlayers(
-            new Player($playerOneName),
-            new Player($playerTwoName),
+            ($playerOne instanceof Player) ? $playerOne : new Player($playerOne),
+            ($playerTwo instanceof Player) ? $playerTwo : new Player($playerTwo),
             $deck1,
             $deck2
         );
@@ -88,7 +88,6 @@ class Game
 
             // Granularité : Tour
             foreach ($this->players as $i => $player) {
-
               // Afin de déterminer l'opposant
                 $opponent = ($i == 0) ? $this->players[1] : $this->players[0];
 
@@ -120,7 +119,7 @@ class Game
                         // Et si en plus son deck est vide
                         if (empty($player->deck->cards)) {
                             print("Son Deck étant vide : -1PV\n");
-                            $player->removeHealth();
+                            $player->removeHealth(1);
                         }
                     } else {
                         // S'il peut jouer, il inflige des dégâts à son adversaire

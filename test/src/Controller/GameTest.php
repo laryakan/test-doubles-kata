@@ -10,7 +10,10 @@ use \Mockery;
 use PHPUnit\Framework\TestCase;
 
 //Spy
-use  App\Test\Spy\Player as PlayerSpy;
+use App\Test\Spy\Player as PlayerSpy;
+
+// Model
+use App\Model\Card;
 
 class GameTest extends TestCase
 {
@@ -133,6 +136,9 @@ class GameTest extends TestCase
         $this->assertEquals($expectedCallsPlayerTwo, $playerSpyTwo->calls);
     }
 
+    public $player1HP = 30;
+    public $player2HP = 30;
+
     /** @test */
     public function testStartGame()
     {
@@ -143,18 +149,42 @@ class GameTest extends TestCase
         $deckPlayer1 = self::mockNewDeck();
         $deckPlayer2 = self::mockNewDeck();
 
-        $game = new Game($player1, $player2, $deckPlayer1, $deckPlayer2);
 
-        $player1->shouldReceive('pickDeckCard')->once();
-        $player2->shouldReceive('pickDeckCard')->once();
-        print('fsdbjfhsdgfgsdyufgsdyufgsdu');
+
+        $player1->shouldReceive('setDeck')->once()->set('health', $this->player1HP)->andSet('name', 'Sébastien');
+        $player2->shouldReceive('setDeck')->once()->set('health', $this->player2HP)->andSet('name', 'Vincent');
+
+        $player1->shouldReceive('pickDeckCard')->atLeast(3);
+        $player2->shouldReceive('pickDeckCard')->atLeast(3);
+
+        $player1->shouldReceive('playHighestValidManaCostingCard');
+        $player2->shouldReceive('playHighestValidManaCostingCard');
+
+        $player1->shouldReceive('removeHealth')->withArgs(function ($arg) {
+            print($arg);
+            return true;
+        })->set('health', $this->player1HP);
+        $player2->shouldReceive('removeHealth')->withArgs(function ($arg) {
+            print($arg);
+            return true;
+        })->set('health', $this->player2HP);
+
+        $player1->shouldReceive('increaseMaxMana');
+        $player2->shouldReceive('increaseMaxMana');
+
+        $player1->shouldReceive('resetCurrentMana');
+        $player2->shouldReceive('resetCurrentMana');
+        
+
+        $game = new Game($player1, $player2, $deckPlayer1, $deckPlayer2);
         $game->startGame();
     }
 
     protected static function mockNewDeck()
     {
+        $card = new Card('testCard', 1);
         $deck = Mockery::mock('App\Model\Deck');
-        $deck->shouldReceive('pickCard');
+        $deck->shouldReceive('pickCard')->andReturn($card);
         return $deck;
     }
 

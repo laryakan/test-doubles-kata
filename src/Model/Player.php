@@ -68,6 +68,7 @@ class Player
     public function removeHealth($point = 1)
     {
         $this->health -= $point;
+        return $this->health;
     }
 
     public function addMana($point = 1)
