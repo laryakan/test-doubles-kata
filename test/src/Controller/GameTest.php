@@ -142,14 +142,11 @@ class GameTest extends TestCase
     /** @test */
     public function testStartGame()
     {
-    
         $player1 = Mockery::mock('App\Model\Player');
         $player2 = Mockery::mock('App\Model\Player');
 
         $deckPlayer1 = self::mockNewDeck();
         $deckPlayer2 = self::mockNewDeck();
-
-
 
         $player1->shouldReceive('setDeck')->once()->set('health', $this->player1HP)->andSet('name', 'Sébastien');
         $player2->shouldReceive('setDeck')->once()->set('health', $this->player2HP)->andSet('name', 'Vincent');
